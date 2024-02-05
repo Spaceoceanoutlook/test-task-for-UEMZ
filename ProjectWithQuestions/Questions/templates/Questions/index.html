@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Задай свой вопрос</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous">
+    </script>
+    <script>
+    $(document).ready(function() {
+        $("#division").change(function() {
+            var val = $(this).val();
+            if (val == "Топливный") {
+                $("#company").html("<option value='Лукойл'>Лукойл</option><option value='Нефтехимурал'>Нефтехимурал</option><option value='Другое'>Другое</option>");
+            } else if (val == "Машиностроительный") {
+                $("#company").html("<option value='Ростех'>Ростех</option><option value='КамАЗ'>КамАЗ</option><option value='Другое'>Другое</option>");
+            } else if (val == "ЯОК") {
+                $("#company").html("<option value='Атомфлот'>Атомфлот</option><option value='Красная Звезда'>Красная Звезда</option><option value='Другое'>Другое</option>");
+            }
+        });
+    });
+    </script>
+
+</head>
+<body>
+<div class="main">
+    <h2>Форма для вопросов на День Директора</h2>
+    <form action="" method="post" name="ques">
+        {% csrf_token %}
+        <p>Выберите ваш дивизион <span style="color: red;">*</span></p>
+
+        <select id="division" name="select_division">
+            <option value="">Выбрать</option>
+            <option value="Топливный" >Топливный</option>
+            <option value="Машиностроительный">Машиностроительный</option>
+            <option value="ЯОК">ЯОК</option>
+        </select>
+
+        <p>Выберите ваше предприятие <span style="color: red;">*</span></p>
+
+        <select id="company" name="select_company">
+            <option value="">Выбрать</option>
+        </select>
+
+        <p>Название предприятия (Если не оказалось в списке выше)</p>
+        <p><input size="45" name="user_company"></p>
+        <p>Ваша электронная почта (для получения личного ответа)</p>
+        <p><input size="45" name="user_email"></p>
+        <p>Задайте ваш вопрос <span style="color: red;">*</span></p>
+        <p><textarea rows="10" cols="45" name="user_question"></textarea></p>
+        <input type="submit" value="Завершить опрос" class="btn">
+    </form>
+    <h2 style="margin-top: 50px;" >Таблица вопросов</h2>
+    <table style="width: 800px;">
+        <tr>
+            <th width="70px">Дата</th>
+            <th width="70px">Предприятие</th>
+            <th>Вопрос</th>
+            <th width="70px">Email</th>
+        </tr>
+        {% for i in q1 %}
+        <tr>
+            <td>{{ i.published_date|date:"d-m-o G-i" }}</td>
+            <td>{{ i.company }}</td>
+            <td>{{ i.text }}</td>
+            <td>{{ i.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Статистика поданных вопросов</h2>
+    <table style="width: 400px;">
+        <tr>
+            <th>Дивизион</th>
+            <th>Предприятие</th>
+            <th width="20px">Количество поданных вопросов</th>
+        </tr>
+        {% for i in q2 %}
+        <tr>
+            <td>{{ i.division }}</td>
+            <td>{{ i.company }}</td>
+            <td>{{ i.company_count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+</body>
+</html>
