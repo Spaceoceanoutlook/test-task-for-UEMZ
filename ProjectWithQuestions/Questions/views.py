@@ -12,13 +12,11 @@ def index(request):
         form = request.POST
         division = form['select_division']
         company = form['select_company']
-        if company == '':
-            return redirect('index')
         if company == 'Другое':
             company = form['user_company']
         email = form['user_email']
         text = form['user_question']
-        if division not in ["Топливный", "Машиностроительный", "ЯОК"] or text == '':
+        if division not in ["Топливный", "Машиностроительный", "ЯОК"] or text == '' or company == '':
             return redirect('index')
         Question.objects.create(division=division, company=company, text=text, email=email).save()
         return redirect('index')
